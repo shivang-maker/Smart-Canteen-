@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Canteeny — Order Your Vibe 🍛</title>
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0;padding:0;box-sizing:border-box; }
+
+:root {
+  --bg:    #FFF3DC;
+  --face:  #FF5C35;
+  --acc:   #FFDD00;
+  --dark:  #1A0A00;
+  --pill:  rgba(255,255,255,0.55);
+  --fh:    'Dela Gothic One', cursive;
+  --fb:    'Nunito', sans-serif;
+}
+
+body {
+  background: var(--bg);
+  font-family: var(--fb);
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  transition: background 0.55s ease;
+}
+
+body::before {
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:999;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.032'/%3E%3C/svg%3E");
+}
+
+.bg-blob { position:fixed;border-radius:50%;filter:blur(72px);opacity:0.28;pointer-events:none;animation:bfloat 9s ease-in-out infinite; }
+.bg-blob:nth-child(1){width:420px;height:420px;background:#FF85C2;top:-120px;left:-120px;}
+.bg-blob:nth-child(2){width:320px;height:320px;background:#FFDD00;bottom:-90px;right:-80px;animation-delay:-3.5s;}
+.bg-blob:nth-child(3){width:220px;height:220px;background:#7FE8A0;top:55%;left:8%;animation-delay:-6s;}
+.bg-blob:nth-child(4){width:170px;height:170px;background:#85C1FF;top:20%;right:5%;animation-delay:-2s;}
+@keyframes bfloat{0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(22px,-30px) scale(1.06);}66%{transform:translate(-16px,18px) scale(0.95);}}
+
+/* PHONE */
+.phone {
+  width:370px; min-height:760px;
+  background:var(--face);
+  border-radius:54px;
+  box-shadow:0 0 0 11px var(--dark),0 50px 90px rgba(0,0,0,0.38),inset 0 0 0 1px rgba(255,255,255,0.07);
+  position:relative;overflow:hidden;
+  display:flex;flex-direction:column;
+  animation:phonein 0.9s cubic-bezier(0.34,1.56,0.64,1) both;
+  transition:background 0.5s ease;
+}
+@keyframes phonein{from{opacity:0;transform:translateY(70px) scale(0.85);}to{opacity:1;transform:none;}}
+
+.island{width:128px;height:38px;background:var(--dark);border-radius:22px;margin:14px auto 0;flex-shrink:0;z-index:10;}
+.sbar{display:flex;justify-content:space-between;align-items:center;padding:5px 26px 0;flex-shrink:0;}
+.sbar span{font-size:11px;font-weight:800;color:var(--dark);opacity:0.6;}
+.tnav{display:flex;justify-content:space-between;align-items:center;padding:7px 22px;flex-shrink:0;}
+.brand{font-family:var(--fh);font-size:20px;color:var(--dark);letter-spacing:-0.5px;}
+.brand sup{font-size:10px;vertical-align:super;opacity:0.5;}
+.cart-btn{width:42px;height:42px;background:var(--acc);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:3px 3px 0 var(--dark);font-size:17px;position:relative;transition:transform 0.15s,box-shadow 0.15s;}
+.cart-btn:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--dark);}
+.badge{position:absolute;top:-4px;right:-4px;width:19px;height:19px;background:var(--dark);color:var(--acc);border-radius:50%;font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center;font-family:var(--fh);}
+
+/* SCREENS */
+.screen{display:none;flex:1;flex-direction:column;overflow:hidden;}
+.screen.on{display:flex;}
+
+/* ── CHARACTER ── */
+.char-wrap{flex:1;display:flex;align-items:flex-end;justify-content:center;position:relative;min-height:190px;overflow:visible;}
+.character{width:246px;position:relative;animation:cfloat 3.2s ease-in-out infinite;cursor:pointer;user-select:none;}
+@keyframes cfloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
+.blob-svg{width:100%;display:block;filter:drop-shadow(0 10px 24px rgba(0,0,0,0.2));}
+.face{position:absolute;top:26%;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:5px;}
+.chef-hat-wrap{position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:88px;pointer-events:none;}
+.brows{display:flex;gap:28px;margin-bottom:-3px;}
+.brow{width:22px;height:4px;background:var(--dark);border-radius:4px;transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);}
+.eyes{display:flex;gap:20px;}
+.eye{width:40px;height:40px;background:#fff;border-radius:50%;border:3px solid var(--dark);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
+.pupil{width:18px;height:18px;background:var(--dark);border-radius:50%;position:absolute;transition:transform 0.08s ease;}
+.blush{display:flex;gap:64px;margin-top:-4px;}
+.blush-dot{width:18px;height:11px;background:rgba(255,100,80,0.48);border-radius:50%;transition:opacity 0.3s;}
+.mouth{width:46px;height:24px;overflow:hidden;position:relative;margin-top:2px;}
+.mouth-inner{width:46px;height:46px;background:var(--dark);border-radius:50%;position:absolute;top:0;left:0;transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);}
+
+.spk{position:absolute;font-size:17px;animation:spkspin 4s linear infinite;pointer-events:none;opacity:0.75;}
+@keyframes spkspin{0%{transform:rotate(0deg) translateX(100px) rotate(0deg);}100%{transform:rotate(360deg) translateX(100px) rotate(-360deg);}}
+.spk:nth-child(2){animation-delay:-1.4s;font-size:13px;}
+.spk:nth-child(3){animation-delay:-2.8s;font-size:20px;}
+
+@keyframes wiggle{0%,100%{transform:rotate(0deg) translateY(0);}20%{transform:rotate(-7deg) translateY(-5px);}40%{transform:rotate(7deg) translateY(-10px);}60%{transform:rotate(-4deg) translateY(-5px);}80%{transform:rotate(3deg) translateY(-2px);}}
+.wiggle{animation:wiggle 0.55s ease !important;}
+
+/* BOTTOM CARD */
+.bc{background:var(--face);padding:16px 22px 26px;flex-shrink:0;transition:background 0.5s;}
+.big-txt{font-family:var(--fh);font-size:30px;line-height:1.05;color:var(--dark);text-transform:uppercase;letter-spacing:-1px;margin-bottom:4px;animation:sup 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.3s both;}
+@keyframes sup{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:none;}}
+.sub-txt{font-size:11px;font-weight:700;color:rgba(26,10,0,0.45);letter-spacing:1.2px;margin-bottom:14px;animation:sup 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.45s both;}
+.cta{width:100%;padding:15px;background:var(--dark);color:var(--acc);font-family:var(--fh);font-size:14px;letter-spacing:0.5px;border:none;border-radius:100px;cursor:pointer;box-shadow:4px 4px 0 rgba(0,0,0,0.26);transition:transform 0.2s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.2s;margin-top:12px;animation:sup 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.6s both;}
+.cta:hover{transform:translateY(-3px);box-shadow:6px 6px 0 rgba(0,0,0,0.2);}
+.cta:active{transform:scale(0.97);}
+.cta:disabled{opacity:0.55;cursor:not-allowed;}
+
+/* ── MENU SCREEN ── */
+.menu-body{flex:1;overflow:hidden;display:flex;flex-direction:column;padding:0 22px;}
+.back-row{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.back-btn{width:36px;height:36px;background:rgba(255,255,255,0.44);border:2px solid rgba(0,0,0,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;font-weight:900;color:var(--dark);box-shadow:2px 2px 0 rgba(0,0,0,0.08);transition:all 0.15s;}
+.back-btn:hover{box-shadow:3px 3px 0 var(--dark);border-color:var(--dark);}
+.screen-title{font-family:var(--fh);font-size:17px;color:var(--dark);letter-spacing:-0.5px;}
+.cat-tabs{display:flex;gap:7px;margin-bottom:11px;overflow-x:auto;padding-bottom:3px;}
+.cat-tabs::-webkit-scrollbar{display:none;}
+.ctab{padding:6px 13px;border-radius:100px;font-weight:700;font-size:11px;background:rgba(255,255,255,0.42);border:2px solid rgba(0,0,0,0.1);cursor:pointer;white-space:nowrap;color:var(--dark);transition:all 0.2s;flex-shrink:0;}
+.ctab.on{background:var(--dark);color:var(--acc);border-color:var(--dark);}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;overflow-y:auto;flex:1;padding-bottom:4px;}
+.mgrid::-webkit-scrollbar{display:none;}
+.mcard{background:rgba(255,255,255,0.42);border:2px solid rgba(0,0,0,0.1);border-radius:18px;padding:13px 11px;cursor:pointer;position:relative;box-shadow:2px 2px 0 rgba(0,0,0,0.07);transition:transform 0.2s cubic-bezier(0.34,1.56,0.64,1),border-color 0.2s,background 0.2s,box-shadow 0.2s;}
+.mcard:hover{transform:translateY(-3px);box-shadow:4px 4px 0 var(--dark);border-color:rgba(0,0,0,0.22);}
+.mcard.sel{background:var(--acc);border-color:var(--dark);box-shadow:4px 4px 0 var(--dark);}
+.mcard-emoji{font-size:28px;display:block;margin-bottom:5px;}
+.mcard-name{font-weight:800;font-size:11px;color:var(--dark);margin-bottom:2px;line-height:1.25;}
+.mcard-desc{font-size:10px;color:rgba(26,10,0,0.5);margin-bottom:5px;line-height:1.3;}
+.mcard-price{font-family:var(--fh);font-size:13px;color:var(--dark);}
+.mchk{position:absolute;top:8px;right:8px;width:20px;height:20px;background:var(--dark);border-radius:50%;display:none;align-items:center;justify-content:center;font-size:10px;color:var(--acc);font-weight:900;}
+.mcard.sel .mchk{display:flex;}
+.vdot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:3px;vertical-align:middle;}
+.qty-ctrl{display:flex;align-items:center;gap:7px;margin-top:6px;}
+.qbtn{width:24px;height:24px;background:var(--dark);color:var(--acc);border:none;border-radius:50%;font-size:14px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;transition:transform 0.15s;}
+.qbtn:hover{transform:scale(1.15);}
+.qnum{font-family:var(--fh);font-size:13px;color:var(--dark);min-width:18px;text-align:center;}
+
+/* Menu bottom bar */
+.menu-bot{background:var(--face);padding:12px 22px 22px;flex-shrink:0;transition:background 0.5s;}
+.total-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.total-lbl{font-size:11px;font-weight:700;color:rgba(26,10,0,0.45);letter-spacing:1px;}
+.total-amt{font-family:var(--fh);font-size:22px;color:var(--dark);}
+.item-cnt{font-size:11px;font-weight:700;color:rgba(26,10,0,0.45);}
+
+/* ── PAYMENT SCREEN ── */
+.pay-body{flex:1;overflow-y:auto;padding:0 22px;}
+.pay-body::-webkit-scrollbar{display:none;}
+.pay-methods{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-bottom:14px;}
+.popt{background:rgba(255,255,255,0.42);border:2px solid rgba(0,0,0,0.1);border-radius:16px;padding:14px 8px;cursor:pointer;text-align:center;transition:all 0.2s;box-shadow:2px 2px 0 rgba(0,0,0,0.07);}
+.popt:hover{transform:translateY(-2px);box-shadow:3px 3px 0 var(--dark);border-color:rgba(0,0,0,0.2);}
+.popt.on{background:var(--acc);border-color:var(--dark);box-shadow:4px 4px 0 var(--dark);}
+.popt-ico{font-size:22px;display:block;margin-bottom:5px;}
+.popt-lbl{font-size:10px;font-weight:700;color:var(--dark);}
+.pay-field{margin-bottom:12px;}
+.pay-field label{display:block;font-size:10px;font-weight:700;letter-spacing:1.5px;color:rgba(26,10,0,0.5);text-transform:uppercase;margin-bottom:6px;}
+.pay-input{width:100%;background:rgba(255,255,255,0.5);border:2px solid rgba(0,0,0,0.12);border-radius:12px;padding:11px 14px;font-family:var(--fb);font-size:13px;font-weight:700;color:var(--dark);outline:none;transition:border-color 0.2s,box-shadow 0.2s;backdrop-filter:blur(6px);}
+.pay-input:focus{border-color:var(--dark);box-shadow:3px 3px 0 var(--dark);}
+.pay-input::placeholder{color:rgba(26,10,0,0.3);}
+.pay-err{font-size:11px;font-weight:700;color:#E53935;margin-top:4px;display:none;}
+.pay-err.show{display:block;}
+.order-mini{background:rgba(255,255,255,0.42);border:2px solid rgba(0,0,0,0.1);border-radius:16px;padding:13px;margin-bottom:12px;backdrop-filter:blur(6px);}
+.orow{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--dark);padding:4px 0;border-bottom:1px solid rgba(0,0,0,0.07);}
+.orow:last-child{border-bottom:none;font-size:14px;padding-top:8px;}
+.processing{display:flex;align-items:center;justify-content:center;gap:10px;padding:10px 0;}
+.dot-spin{width:8px;height:8px;background:var(--dark);border-radius:50%;animation:dotbounce 1.2s ease-in-out infinite;}
+.dot-spin:nth-child(2){animation-delay:0.2s;}
+.dot-spin:nth-child(3){animation-delay:0.4s;}
+@keyframes dotbounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+
+/* ── CONFIRM SCREEN ── */
+.cfm-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 22px;overflow-y:auto;}
+.cfm-body::-webkit-scrollbar{display:none;}
+.big-chk{width:78px;height:78px;background:var(--acc);border-radius:50%;border:4px solid var(--dark);display:flex;align-items:center;justify-content:center;font-size:34px;box-shadow:5px 5px 0 var(--dark);animation:popin 0.55s cubic-bezier(0.34,1.56,0.64,1) both;margin-bottom:14px;}
+@keyframes popin{from{transform:scale(0);}to{transform:scale(1);}}
+.cfm-title{font-family:var(--fh);font-size:28px;color:var(--dark);text-align:center;line-height:1.05;margin-bottom:4px;text-transform:uppercase;}
+.cfm-sub{font-size:11px;font-weight:700;color:rgba(26,10,0,0.45);margin-bottom:10px;text-align:center;}
+.oid-badge{font-family:var(--fh);font-size:12px;border:2.5px solid var(--dark);padding:7px 20px;border-radius:100px;box-shadow:3px 3px 0 var(--dark);color:var(--dark);margin-bottom:14px;}
+.cfm-items{width:100%;background:rgba(255,255,255,0.44);border:2px solid rgba(0,0,0,0.1);border-radius:16px;padding:13px;margin-bottom:14px;}
+
+/* Tracker */
+.tracker{display:flex;align-items:center;justify-content:center;width:100%;margin-bottom:8px;}
+.tr-step{display:flex;flex-direction:column;align-items:center;gap:5px;}
+.tr-dot{width:30px;height:30px;border-radius:50%;border:2.5px solid rgba(0,0,0,0.18);background:rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:var(--dark);transition:all 0.45s cubic-bezier(0.34,1.56,0.64,1);}
+.tr-dot.done{background:var(--dark);color:var(--acc);border-color:var(--dark);}
+.tr-dot.act{background:var(--acc);border-color:var(--dark);box-shadow:0 0 0 4px rgba(255,221,0,0.3);}
+.tr-line{flex:1;height:2.5px;background:rgba(0,0,0,0.13);margin:0 -1px;margin-bottom:22px;transition:background 0.45s;}
+.tr-line.done{background:var(--dark);}
+.tr-lbl{font-size:9px;font-weight:700;color:rgba(26,10,0,0.42);letter-spacing:0.5px;text-align:center;}
+.tr-lbl.on{color:var(--dark);}
+.eta{font-size:11px;font-weight:700;color:rgba(26,10,0,0.45);text-align:center;min-height:18px;}
+
+/* Toast */
+.toast{position:fixed;top:28px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--dark);color:var(--acc);font-family:var(--fh);font-size:12px;padding:10px 22px;border-radius:100px;box-shadow:3px 3px 0 rgba(0,0,0,0.2);z-index:9999;transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);white-space:nowrap;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+.hint{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;color:rgba(26,10,0,0.28);letter-spacing:2px;text-transform:uppercase;pointer-events:none;}
+</style>
+</head>
+<body>
+
+<div class="bg-blob"></div>
+<div class="bg-blob"></div>
+<div class="bg-blob"></div>
+<div class="bg-blob"></div>
+<div class="toast" id="toast"></div>
+
+<div class="phone" id="phone">
+  <div class="island"></div>
+  <div class="sbar"><span>9:41</span><span id="timeDisplay">●●● ▲ 🔋</span></div>
+  <div class="tnav">
+    <div class="brand">Canteeny<sup>®</sup></div>
+    <div class="cart-btn" id="cartBtn" onclick="goMenu()">🛒<div class="badge" id="cartBadge">0</div></div>
+  </div>
+
+  <!-- ══ SCREEN 1: HOME ══ -->
+  <div class="screen on" id="s1">
+    <div class="char-wrap">
+      <div class="spk" style="top:30%;left:12%">✦</div>
+      <div class="spk" style="top:38%;right:10%">✦</div>
+      <div class="spk" style="top:18%;left:42%">✦</div>
+      <div class="character" id="character" onclick="wiggle()">
+        <svg class="chef-hat-wrap" viewBox="0 0 90 55" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:-19%;left:50%;transform:translateX(-50%);width:88px;">
+          <rect x="14" y="38" width="62" height="14" rx="5" fill="#1A0A00"/>
+          <ellipse cx="45" cy="30" rx="32" ry="22" fill="white" stroke="#1A0A00" stroke-width="3"/>
+          <ellipse cx="45" cy="18" rx="16" ry="14" fill="white" stroke="#1A0A00" stroke-width="3"/>
+          <rect x="21" y="36" width="48" height="6" rx="2" fill="#FF5C35"/>
+          <rect x="21" y="41" width="48" height="3" rx="1" fill="#FFDD00"/>
+        </svg>
+        <svg class="blob-svg" viewBox="0 0 250 230" xmlns="http://www.w3.org/2000/svg">
+          <defs><filter id="bs"><feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="rgba(0,0,0,0.17)"/></filter></defs>
+          <path id="blobPath" d="M125,12 C172,12 218,44 228,86 C240,134 218,178 176,202 C150,217 100,219 68,204 C32,187 12,150 10,110 C7,65 38,17 85,12 C98,10 112,12 125,12 Z" fill="var(--face)" filter="url(#bs)" style="transition:fill 0.5s;"/>
+        </svg>
+        <div class="face">
+          <div class="brows"><div class="brow" id="browL"></div><div class="brow" id="browR"></div></div>
+          <div class="eyes">
+            <div class="eye"><div class="pupil" id="pL"></div></div>
+            <div class="eye"><div class="pupil" id="pR"></div></div>
+          </div>
+          <div class="blush"><div class="blush-dot" id="bshL"></div><div class="blush-dot" id="bshR"></div></div>
+          <div class="mouth" id="mWrap"><div class="mouth-inner" id="mInner"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="bc" id="homeBC">
+      <div class="big-txt" id="homeTitle">HMM WHAT ARE WE EATING TODAY</div>
+      <div class="sub-txt" id="homeDate">loading...</div>
+      <button class="cta" onclick="goMenu()">Show Me The Food 👀</button>
+    </div>
+  </div>
+
+  <!-- ══ SCREEN 2: MENU ══ -->
+  <div class="screen" id="s2">
+    <div class="menu-body">
+      <div class="back-row">
+        <div class="back-btn" onclick="goHome()">←</div>
+        <div class="screen-title">PICK YOUR POISON 🍽</div>
+      </div>
+      <div class="cat-tabs" id="catTabs"></div>
+      <div class="mgrid" id="mgrid"></div>
+    </div>
+    <div class="menu-bot" id="menuBot">
+      <div class="total-row">
+        <div><div class="total-lbl">TOTAL</div><div class="total-amt" id="totalAmt">Rs. 0</div></div>
+        <div class="item-cnt" id="itemCnt">0 items</div>
+      </div>
+      <button class="cta" id="checkoutBtn" onclick="goPayment()">Checkout →</button>
+    </div>
+  </div>
+
+  <!-- ══ SCREEN 3: PAYMENT ══ -->
+  <div class="screen" id="s3">
+    <div class="menu-body" style="padding-top:4px;">
+      <div class="back-row">
+        <div class="back-btn" onclick="goMenu()">←</div>
+        <div class="screen-title">PAY UP BESTIE 💸</div>
+      </div>
+      <!-- Name -->
+      <div class="pay-field">
+        <label>Your Name</label>
+        <input class="pay-input" id="payName" placeholder="e.g. Shivang" maxlength="30">
+      </div>
+      <!-- Payment methods -->
+      <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:rgba(26,10,0,0.45);text-transform:uppercase;margin-bottom:8px;">Payment Method</div>
+      <div class="pay-methods" id="payMethods">
+        <div class="popt on" data-m="UPI"    onclick="selPay(this,'UPI')"><span class="popt-ico">📱</span><div class="popt-lbl">UPI</div></div>
+        <div class="popt"    data-m="Card"   onclick="selPay(this,'Card')"><span class="popt-ico">💳</span><div class="popt-lbl">Card</div></div>
+        <div class="popt"    data-m="Cash"   onclick="selPay(this,'Cash')"><span class="popt-ico">💵</span><div class="popt-lbl">Cash</div></div>
+        <div class="popt"    data-m="Wallet" onclick="selPay(this,'Wallet')"><span class="popt-ico">👝</span><div class="popt-lbl">Wallet</div></div>
+        <div class="popt"    data-m="NetBank" onclick="selPay(this,'NetBank')"><span class="popt-ico">🏦</span><div class="popt-lbl">Net Bank</div></div>
+        <div class="popt"    data-m="Canteen" onclick="selPay(this,'Canteen')"><span class="popt-ico">🎫</span><div class="popt-lbl">Card</div></div>
+      </div>
+      <!-- Dynamic detail field -->
+      <div id="payDetailWrap" class="pay-field">
+        <label id="payDetailLabel">UPI ID</label>
+        <input class="pay-input" id="payDetail" placeholder="yourname@upi">
+        <div class="pay-err" id="payErr">nope, try again bestie</div>
+      </div>
+      <!-- Order mini summary -->
+      <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:rgba(26,10,0,0.45);text-transform:uppercase;margin-bottom:8px;">Your Order</div>
+      <div class="order-mini" id="payOrderSummary"></div>
+    </div>
+    <div class="menu-bot" id="payBot">
+      <div id="processingDiv" class="processing" style="display:none;">
+        <div class="dot-spin"></div><div class="dot-spin"></div><div class="dot-spin"></div>
+        <span style="font-size:11px;font-weight:700;color:var(--dark);">Processing...</span>
+      </div>
+      <button class="cta" id="placeBtn" onclick="placeOrder()">Place Order 🚀</button>
+    </div>
+  </div>
+
+  <!-- ══ SCREEN 4: CONFIRM / TRACKING ══ -->
+  <div class="screen" id="s4">
+    <div class="cfm-body">
+      <div class="big-chk">✓</div>
+      <div class="cfm-title">ORDER<br>PLACED!</div>
+      <div class="cfm-sub" id="cfmSub">ur food is being slapped together 👨‍🍳</div>
+      <div class="oid-badge" id="cfmOid">Order #C-0000</div>
+      <div class="cfm-items" id="cfmItems"></div>
+      <!-- Tracker -->
+      <div class="tracker">
+        <div class="tr-step"><div class="tr-dot done" id="td1">✓</div><div class="tr-lbl on">Placed</div></div>
+        <div class="tr-line" id="tl1"></div>
+        <div class="tr-step"><div class="tr-dot" id="td2">📋</div><div class="tr-lbl" id="tl2l">Confirmed</div></div>
+        <div class="tr-line" id="tl2"></div>
+        <div class="tr-step"><div class="tr-dot" id="td3">👨‍🍳</div><div class="tr-lbl" id="tl3l">Cooking</div></div>
+        <div class="tr-line" id="tl3"></div>
+        <div class="tr-step"><div class="tr-dot" id="td4">🛎</div><div class="tr-lbl" id="tl4l">Ready!</div></div>
+      </div>
+      <div class="eta" id="etaLbl">⏱ est. ready in ~8 min</div>
+    </div>
+    <div class="menu-bot" id="cfmBot">
+      <button class="cta" onclick="newOrder()">Order More Food 🍽</button>
+    </div>
+  </div>
+</div>
+
+<div class="hint">Canteeny — skip the queue ✦</div>
+
+<script>
+// ── STATE ──
+let cart   = {};          // id -> qty
+let allMenu= [];
+let curCat = 'all';
+let payMethod = 'UPI';
+let currentOrderId = null;
+let trackInterval = null;
+
+// ── INIT ──
+window.onload = async () => {
+  setDate();
+  setMood('default');
+  await loadMenu();
+  startBlobMorph();
+  initEyeTracking();
+};
+
+// ── DATE ──
+function setDate() {
+  const months=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const d = new Date();
+  document.getElementById('homeDate').textContent = d.getDate() + " " + months[d.getMonth()];
+}
+
+// ── FETCH MENU FROM BACKEND ──
+async function loadMenu() {
+  try {
+    const r = await fetch('/api/menu');
+    allMenu = await r.json();
+    const catR = await fetch('/api/categories');
+    const cats = await catR.json();
+    buildCatTabs(['All', ...cats]);
+    renderMenu('all');
+  } catch(e) {
+    showToast("Backend offline? Skill issue 💀");
+  }
+}
+
+function buildCatTabs(cats) {
+  const bar = document.getElementById('catTabs');
+  bar.innerHTML = cats.map((c,i) =>
+    `<div class="ctab ${i===0?'on':''}" onclick="filterCat('${c}',this)">${c}</div>`
+  ).join('');
+}
+
+function filterCat(cat, btn) {
+  curCat = cat === 'All' ? 'all' : cat;
+  document.querySelectorAll('.ctab').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  renderMenu(curCat);
+}
+
+function renderMenu(cat) {
+  const items = cat === 'all' ? allMenu : allMenu.filter(m => m.cat.toLowerCase() === cat.toLowerCase());
+  const grid = document.getElementById('mgrid');
+  grid.innerHTML = items.map(item => {
+    const qty = cart[item.id] || 0;
+    const sel = qty > 0;
+    return `
+    <div class="mcard ${sel?'sel':''}" id="card-${item.id}">
+      <div class="mchk">✓</div>
+      <span class="mcard-emoji">${item.emoji}</span>
+      <div class="mcard-name">
+        <span class="vdot" style="background:${item.veg?'#4CAF50':'#E53935'}"></span>${item.name}
+      </div>
+      <div class="mcard-desc">${item.desc}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div class="mcard-price">Rs.${item.price}</div>
+        ${sel ? `
+        <div class="qty-ctrl">
+          <button class="qbtn" onclick="event.stopPropagation();changeQty('${item.id}',-1)">−</button>
+          <span class="qnum">${qty}</span>
+          <button class="qbtn" onclick="event.stopPropagation();changeQty('${item.id}',1)">+</button>
+        </div>` : `
+        <button class="qbtn" onclick="event.stopPropagation();changeQty('${item.id}',1)" style="background:var(--dark);color:var(--acc);">+</button>`}
+      </div>
+    </div>`;
+  }).join('');
+
+  // click card to add
+  grid.querySelectorAll('.mcard').forEach(card => {
+    card.addEventListener('click', () => {
+      const id = card.id.replace('card-','');
+      if (!cart[id]) { changeQty(id, 1); }
+    });
+  });
+  updateCartUI();
+}
+
+function changeQty(id, delta) {
+  const cur = cart[id] || 0;
+  const next = Math.max(0, cur + delta);
+  if (next === 0) delete cart[id]; else cart[id] = next;
+  wiggle();
+  renderMenu(curCat);
+}
+
+function updateCartUI() {
+  const count = Object.keys(cart).length;
+  const total = allMenu.reduce((s,m) => s + (cart[m.id]||0)*m.price, 0);
+  document.getElementById('cartBadge').textContent = count;
+  document.getElementById('totalAmt').textContent  = 'Rs. '+total;
+  document.getElementById('itemCnt').textContent   = count+' item'+(count!==1?'s':'');
+  document.getElementById('checkoutBtn').disabled  = count === 0;
+}
+
+// ── PAYMENT ──
+function selPay(el, method) {
+  payMethod = method;
+  document.querySelectorAll('.popt').forEach(p => p.classList.remove('on'));
+  el.classList.add('on');
+  const wrap  = document.getElementById('payDetailWrap');
+  const label = document.getElementById('payDetailLabel');
+  const input = document.getElementById('payDetail');
+  if (method === 'Cash' || method === 'Canteen') {
+    wrap.style.display = 'none';
+  } else {
+    wrap.style.display = 'block';
+    if (method === 'UPI')     { label.textContent = 'UPI ID';      input.placeholder = 'yourname@upi'; }
+    if (method === 'Card')    { label.textContent = 'Card Number'; input.placeholder = '1234 5678 9012 3456'; }
+    if (method === 'Wallet')  { label.textContent = 'Wallet ID';   input.placeholder = 'Phone or wallet ID'; }
+    if (method === 'NetBank') { label.textContent = 'Account No';  input.placeholder = 'Account number'; }
+  }
+}
+
+function buildPaySummary() {
+  const items = allMenu.filter(m => cart[m.id]);
+  let total = 0;
+  let rows = items.map(m => {
+    const sub = m.price * cart[m.id];
+    total += sub;
+    return `<div class="orow"><span>${m.emoji} ${m.name} ×${cart[m.id]}</span><span>Rs.${sub}</span></div>`;
+  }).join('');
+  rows += `<div class="orow"><span>Total</span><span>Rs.${total}</span></div>`;
+  document.getElementById('payOrderSummary').innerHTML = rows;
+}
+
+// ── PLACE ORDER ──
+async function placeOrder() {
+  const name    = document.getElementById('payName').value.trim() || 'Anonymous';
+  const detail  = document.getElementById('payDetail').value.trim();
+  const errEl   = document.getElementById('payErr');
+  errEl.classList.remove('show');
+
+  // Validate payment with backend
+  if (payMethod !== 'Cash' && payMethod !== 'Canteen') {
+    try {
+      setProcessing(true);
+      const vr = await fetch('/api/payment/validate', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({method: payMethod, details: detail})
+      });
+      const vd = await vr.json();
+      if (!vd.success) {
+        errEl.textContent = vd.error || 'Payment failed lol';
+        errEl.classList.add('show');
+        setProcessing(false);
+        return;
+      }
+      showToast('Payment verified! '+vd.txn_id+' ✓');
+    } catch(e) {
+      showToast("Network issue rn 😭");
+      setProcessing(false);
+      return;
+    }
+  }
+
+  // Create order
+  try {
+    const items = Object.entries(cart).map(([id,qty]) => ({id, qty}));
+    const or = await fetch('/api/order', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({items, payment: payMethod, name})
+    });
+    const od = await or.json();
+    setProcessing(false);
+    if (!od.success) { showToast("Order failed 💀 try again"); return; }
+    currentOrderId = od.order.order_id;
+    buildConfirmScreen(od.order);
+    goScreen('s4');
+    startTracking();
+  } catch(e) {
+    setProcessing(false);
+    showToast("Something broke fr 😭");
+  }
+}
+
+function setProcessing(on) {
+  document.getElementById('processingDiv').style.display = on ? 'flex' : 'none';
+  document.getElementById('placeBtn').style.display = on ? 'none' : 'block';
+}
+
+// ── CONFIRM SCREEN ──
+function buildConfirmScreen(order) {
+  document.getElementById('cfmOid').textContent = 'Order #'+order.order_id;
+  document.getElementById('cfmSub').textContent = order.name+' · Rs.'+order.total+' · via '+order.payment;
+  let rows = order.items.map(i =>
+    `<div class="orow"><span>${i.emoji} ${i.name} ×${i.qty}</span><span>Rs.${i.subtotal}</span></div>`
+  ).join('');
+  rows += `<div class="orow"><span>Total</span><span>Rs.${order.total}</span></div>`;
+  document.getElementById('cfmItems').innerHTML = rows;
+  resetTracker();
+}
+
+// ── ORDER TRACKING ──
+function startTracking() {
+  if (trackInterval) clearInterval(trackInterval);
+  pollTracking();
+  trackInterval = setInterval(pollTracking, 3000);
+}
+
+async function pollTracking() {
+  if (!currentOrderId) return;
+  try {
+    const r  = await fetch('/api/order/'+currentOrderId);
+    const od = await r.json();
+    updateTracker(od.stage);
+    if (od.stage >= 4) {
+      clearInterval(trackInterval);
+      document.getElementById('etaLbl').textContent = '🎉 Ready for pickup! Come get it!';
+    } else {
+      const msgs = ['','⏱ est. ready in ~8 min','👨‍🍳 Chef is on it!','🔥 Almost done fr!',''];
+      document.getElementById('etaLbl').textContent = msgs[od.stage] || '';
+    }
+  } catch(e) {}
+}
+
+function updateTracker(stage) {
+  const dots  = ['td1','td2','td3','td4'];
+  const lines = ['tl1','tl2','tl3'];
+  const lbls  = [null,'tl2l','tl3l','tl4l'];
+  dots.forEach((id,i) => {
+    const el = document.getElementById(id);
+    el.classList.remove('done','act');
+    if (i+1 < stage)  el.classList.add('done');
+    if (i+1 === stage) el.classList.add('act');
+    if (i > 0 && lbls[i]) {
+      const l = document.getElementById(lbls[i]);
+      l.classList.toggle('on', i+1 <= stage);
+    }
+  });
+  lines.forEach((id,i) => {
+    document.getElementById(id).classList.toggle('done', i+1 < stage);
+  });
+}
+
+function resetTracker() {
+  ['td1','td2','td3','td4'].forEach(id => {
+    const el = document.getElementById(id);
+    el.classList.remove('done','act');
+  });
+  document.getElementById('td1').classList.add('done');
+  document.getElementById('td2').classList.add('act');
+  ['tl1','tl2','tl3'].forEach(id => document.getElementById(id).classList.remove('done'));
+  ['tl2l','tl3l','tl4l'].forEach(id => document.getElementById(id).classList.remove('on'));
+  document.getElementById('etaLbl').textContent = '⏱ est. ready in ~8 min';
+}
+
+// ── NAVIGATION ──
+function goScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  // sync bottom card colors
+  ['homeBC','menuBot','payBot','cfmBot'].forEach(bid => {
+    const el = document.getElementById(bid);
+    if (el) el.style.background = getComputedStyle(document.documentElement).getPropertyValue('--face');
+  });
+}
+
+function goHome()    { goScreen('s1'); }
+function goMenu()    { renderMenu(curCat); goScreen('s2'); }
+function goPayment() {
+  if (Object.keys(cart).length === 0) { showToast("Pick something to eat first 🙄"); return; }
+  buildPaySummary();
+  selPay(document.querySelector('.popt[data-m="UPI"]'), 'UPI');
+  goScreen('s3');
+}
+function newOrder()  {
+  cart = {}; currentOrderId = null;
+  if (trackInterval) clearInterval(trackInterval);
+  updateCartUI();
+  setMood('default');
+  goScreen('s1');
+}
+
+// ── BLOB CHARACTER ──
+const blobs = [
+  "M125,12 C172,12 218,44 228,86 C240,134 218,178 176,202 C150,217 100,219 68,204 C32,187 12,150 10,110 C7,65 38,17 85,12 C98,10 112,12 125,12 Z",
+  "M125,9 C168,7 220,38 232,82 C246,134 220,182 174,205 C146,220 94,222 60,204 C22,184 5,144 6,102 C7,56 44,11 92,9 C103,7 114,10 125,9 Z",
+  "M125,14 C166,12 212,48 222,90 C234,138 210,176 166,200 C138,215 96,218 64,202 C28,184 11,148 10,112 C9,67 42,18 88,14 C100,12 113,15 125,14 Z",
+  "M125,11 C170,9 216,42 226,84 C238,132 214,176 170,200 C144,215 98,218 66,202 C30,184 9,146 8,108 C6,63 40,14 87,11 C99,9 112,12 125,11 Z",
+];
+let bi = 0;
+function startBlobMorph() {
+  setInterval(() => {
+    bi = (bi+1) % blobs.length;
+    document.getElementById('blobPath').setAttribute('d', blobs[bi]);
+  }, 2400);
+}
+
+function wiggle() {
+  const c = document.getElementById('character');
+  c.classList.remove('wiggle'); void c.offsetWidth;
+  c.classList.add('wiggle');
+  setTimeout(() => c.classList.remove('wiggle'), 600);
+}
+
+// ── MOODS ──
+const moods = {
+  default:  {mouth:'smile', brows:'normal',  blush:true},
+  excited:  {mouth:'open',  brows:'raised',  blush:true},
+  sad:      {mouth:'sad',   brows:'sad',     blush:true},
+  angry:    {mouth:'angry', brows:'angry',   blush:false},
+  surprised:{mouth:'open',  brows:'raised',  blush:true},
+};
+
+function setMood(m) {
+  const cfg = moods[m] || moods.default;
+  // Mouth
+  const w = document.getElementById('mWrap');
+  const mi = document.getElementById('mInner');
+  if (cfg.mouth==='smile')   { w.style.height='24px';mi.style.cssText='width:46px;height:46px;border-radius:50%;top:0;'; }
+  if (cfg.mouth==='open')    { w.style.height='30px';mi.style.cssText='width:46px;height:30px;border-radius:10px;top:0;'; }
+  if (cfg.mouth==='sad')     { w.style.height='24px';mi.style.cssText='width:46px;height:46px;border-radius:50%;top:-22px;'; }
+  if (cfg.mouth==='angry')   { w.style.height='12px';mi.style.cssText='width:46px;height:12px;border-radius:4px;top:0;'; }
+  // Brows
+  const bl = document.getElementById('browL'), br = document.getElementById('browR');
+  if (cfg.brows==='angry')   { bl.style.transform='rotate(15deg) translateY(4px)'; br.style.transform='rotate(-15deg) translateY(4px)'; }
+  else if (cfg.brows==='raised') { bl.style.transform='translateY(-5px)'; br.style.transform='translateY(-5px)'; }
+  else if (cfg.brows==='sad')    { bl.style.transform='rotate(-10deg)'; br.style.transform='rotate(10deg)'; }
+  else                           { bl.style.transform='none'; br.style.transform='none'; }
+  // Blush
+  const op = cfg.blush ? '1' : '0';
+  document.getElementById('bshL').style.opacity = op;
+  document.getElementById('bshR').style.opacity = op;
+}
+
+// Random funny reactions on cart change
+const reacts = [
+  {title:"OKAY OKAY WE'RE EATING", mood:'excited'},
+  {title:"BESTIE IS HUNGRY TODAY 🔥", mood:'excited'},
+  {title:"WISE CHOICE ACTUALLY NGL", mood:'default'},
+  {title:"ATE AND LEFT NO CRUMBS", mood:'excited'},
+  {title:"YOUR STOMACH IS CALLING", mood:'surprised'},
+  {title:"BRO IS REALLY DOING THIS", mood:'surprised'},
+];
+let lastReact = -1;
+function randomReact() {
+  let i; do { i = Math.floor(Math.random()*reacts.length); } while(i===lastReact);
+  lastReact = i;
+  document.getElementById('homeTitle').textContent = reacts[i].title;
+  setMood(reacts[i].mood);
+  wiggle();
+}
+
+// override changeQty to also react
+const _changeQty = changeQty;
+// (already defined above, reactions happen on any add)
+document.addEventListener('click', e => {
+  if (e.target.classList.contains('qbtn')) randomReact();
+});
+
+// ── EYE TRACKING ──
+function initEyeTracking() {
+  document.addEventListener('mousemove', e => {
+    ['pL','pR'].forEach(id => {
+      const p = document.getElementById(id);
+      if (!p) return;
+      const eye = p.parentElement;
+      const r = eye.getBoundingClientRect();
+      const cx = r.left+r.width/2, cy = r.top+r.height/2;
+      const angle = Math.atan2(e.clientY-cy, e.clientX-cx);
+      const d = 7;
+      p.style.transform = `translate(${Math.cos(angle)*d}px,${Math.sin(angle)*d}px)`;
+    });
+  });
+}
+
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ── REAL TIME CLOCK ──
+setInterval(() => {
+  const d = new Date();
+  const h = String(d.getHours()).padStart(2,'0');
+  const m = String(d.getMinutes()).padStart(2,'0');
+  document.getElementById('timeDisplay').textContent = h+':'+m+' 🔋';
+}, 1000);
+</script>
+</body>
+</html>
